@@ -14,8 +14,8 @@ jsoncrack is tool on developing to operate json []byte straightly. The json mars
 | Get | get json []byte field value |
 
 ## Example
-```
-	package main
+```go
+package main
 
 import (
 	"fmt"
