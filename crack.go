@@ -29,6 +29,7 @@ type Jsoner struct {
 func (j Jsoner) Marshal(dest interface{}) ([]byte, error) {
 	return json.Marshal(dest)
 }
+
 func (j Jsoner) Unmarshal(data []byte, dest interface{}) error {
 	return json.Unmarshal(data, dest)
 }
