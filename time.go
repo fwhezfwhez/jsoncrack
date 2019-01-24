@@ -51,3 +51,7 @@ func (t *Time) UnmarshalJSON(buf []byte) error {
 
 	return errorx.GroupErrors(errors...)
 }
+
+func (t Time) Time() time.Time{
+	return time.Time(t)
+}
