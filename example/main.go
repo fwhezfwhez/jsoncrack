@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"jsoncrack"
+	"github.com/fwhezfwhez/jsoncrack"
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 
 	// add
 	fmt.Println("add class.master.company.country.chinese_name : '中国'")
-	r, e = jc.Add(in, "chinese_name", "中国", "class", "master", "c  ompany", "country")
+	r, e = jc.Add(in, "chinese_name", "中国", "class", "master", "company", "country")
 	if e!=nil {
 		panic(e)
 	}

@@ -1,9 +1,61 @@
 # jsoncrack
-jsoncrack is tool on developing to operate json []byte straightly. The json marshaller is an interface.any **`object`** that realize **`Marshal(interface{})([]byte,error)`** and **`Unmarshal(data []byte, dest interface{})error`** can be specific by **`jc:=jsoncrack.NewCracker(object)`**
-
 [![Godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/fwhezfwhez/jsoncrack)
+[![Build Status]( https://www.travis-ci.org/fwhezfwhez/jsoncrack.svg?branch=master)]( https://www.travis-ci.org/fwhezfwhez/jsoncrack)
 
-## function menu
+jsoncrack is tool on developing to operate json []byte straightly.
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [jsoncrack](#jsoncrack)
+  - [1. Start](#1-start)
+  - [2. Notice](#2-notice)
+    - [2.1 json marshaller can be specific when inited.](#21-json-marshaller-can-be-specific-when-inited)
+    - [2.2 crud of jsoncrack doesn't change the original data.](#22-crud-of-jsoncrack-doesnt-change-the-original-data)
+    - [2.3 Get() and Delete() can specific the returning type of the modified copy of data,ranging in `[jsoncrack.MAP, jsoncrack.ARRAY, jsoncrack.BYTE]`](#23-get-and-delete-can-specific-the-returning-type-of-the-modified-copy-of-dataranging-in-jsoncrackmap-jsoncrackarray-jsoncrackbyte)
+  - [3. Function menus](#3-function-menus)
+  - [4. Example](#4-example)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 1. Start
+`go get github.com/fwhezfwhez/jsoncrack`
+
+## 2. Notice
+### 2.1 json marshaller can be specific when inited.
+Any instance that realize JsonMarshaller interface can be set jsoncrack's json marshaller. The default is the official json package `encoding/json`.
+
+```go
+type JsonMarshaller interface {
+	Marshal(interface{}) ([]byte, error)
+	Unmarshal([]byte, interface{}) error
+}
+
+type Jsoner struct {
+}
+
+func (j Jsoner) Marshal(dest interface{}) ([]byte, error) {
+	return json.Marshal(dest)
+}
+
+func (j Jsoner) Unmarshal(data []byte, dest interface{}) error {
+	return json.Unmarshal(data, dest)
+}
+func main() {
+    jsonMarshaler := Jsoner{}
+	jc := jsoncrack.NewCracker(jsonMarshaler)
+	....
+}
+
+```
+### 2.2 crud of jsoncrack doesn't change the original data.
+All apis of jsoncrack which operates []byte data returns a modified copy of the original data.
+
+### 2.3 Get() and Delete() can specific the returning type of the modified copy of data,ranging in `[jsoncrack.MAP, jsoncrack.ARRAY, jsoncrack.BYTE]`
+jsoncrack.Bytes is ok for all cases.If you ensure your returning data is a formated map[string]interface{}, json.Map is optional.
+jsoncrack.ARRAY is now the same as BYTES.It might be changed with upgrading the version of jsoncrack.
+
+## 3. Function menus
 | function | info |
 |:----------- | :---- |
 | Marshal | json encoding  |
@@ -13,7 +65,7 @@ jsoncrack is tool on developing to operate json []byte straightly. The json mars
 | Add | add json []byte field|
 | Get | get json []byte field value |
 
-## Example
+## 4. Example
 ```go
 package main
 

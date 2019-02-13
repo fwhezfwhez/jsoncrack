@@ -156,8 +156,14 @@ func (jc JsonCracker) Get(vtype int, data []byte, keys ...string) (interface{}, 
 }
 
 // vtype: jsoncrack.MAP,jsoncrack.Array,jsoncrack.BYTES
+// When vtype is 'jsoncrack.Map', it returns (map[string]interface{}, error),
+// otherwise it returns (json.RawMessage,error) or ([]byte, error)
+//
 // when safe is true, delete the specific key while not existed, throws an error.
 // when safe is false, do nothing if not existed keys
+//
+// Delete() returns the data modified already, while keeping the former data unchanged.
+// When data is input , function will marshal its unmarshal object again to get a copy of data
 func (jc JsonCracker) Delete(vtype int,safe bool,data []byte, keys ...string)(interface{}, error){
 	var dest map[string]interface{}
 	er := jc.Unmarshal(data, &dest)
