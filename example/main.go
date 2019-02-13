@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/fwhezfwhez/jsoncrack"
 )
@@ -29,8 +30,8 @@ func main() {
 	jc := jsoncrack.NewCracker(nil)
 	// get
 	fmt.Println("get class.master")
-	r ,e :=jc.Get(jsoncrack.BYTES, in, "class", "master")
-	if e!=nil {
+	r, e := jc.Get(jsoncrack.BYTES, in, "class", "master")
+	if e != nil {
 		panic(e)
 	}
 	fmt.Println(string(r.([]byte)))
@@ -38,7 +39,7 @@ func main() {
 	// update
 	fmt.Println("update class.master.company.country.location")
 	r, e = jc.Update(in, "location", "亚洲", "class", "master", "company", "country")
-	if e!=nil {
+	if e != nil {
 		panic(e)
 	}
 	fmt.Println(string(r.([]byte)))
@@ -46,16 +47,54 @@ func main() {
 	// add
 	fmt.Println("add class.master.company.country.chinese_name : '中国'")
 	r, e = jc.Add(in, "chinese_name", "中国", "class", "master", "company", "country")
-	if e!=nil {
+	if e != nil {
 		panic(e)
 	}
 	fmt.Println(string(r.([]byte)))
 
 	// delete
 	fmt.Println("delete class.master.company.manager")
-	r, e = jc.Delete(jsoncrack.BYTES,false,in, "class", "master", "company", "manager")
-	if e!=nil {
+	r, e = jc.Delete(jsoncrack.BYTES, false, in, "class", "master", "company", "manager")
+	if e != nil {
 		panic(e)
 	}
 	fmt.Println(string(r.([]byte)))
+
+	type Time = jsoncrack.Time
+	type VO struct {
+		CreatedAt1  Time `json:"created_at1"`
+		CreatedAt2  Time `json:"created_at2"`
+		CreatedAt3  Time `json:"created_at3"`
+		CreatedAt4  Time `json:"created_at4"`
+		CreatedAt6  Time `json:"created_at6"`
+		CreatedAt7  Time `json:"created_at7"`
+		CreatedAt8  Time `json:"created_at8"`
+		CreatedAt9  Time `json:"created_at9"`
+		CreatedAt10 Time `json:"created_at10"`
+		CreatedAt11 Time `json:"created_at11"`
+		CreatedAt12 Time `json:"created_at12"`
+		CreatedAt13 Time `json:"created_at13"`
+	}
+	var request = []byte(`{
+        "created_at1": "2018-01-01",
+        "created_at2": "2018-1-01",
+		"created_at3": "2018/01/01",
+		"created_at4": "2018/1/01",
+        "created_at6": "2018.01.01",
+        "created_at7": "2018.1.01",
+
+        "created_at8": "2018-01-01 15:04:05",
+        "created_at9": "2018-1-01 15:04:05",
+		"created_at10": "2018.01.01 15:04:05",
+		"created_at11": "2018.1.01 15:04:05",
+		"created_at12": "2018/01/01 15:04:05",
+		"created_at13": "2018/1/01 15:04:05"
+    }`)
+	vo := VO{}
+	e = json.Unmarshal(request, &vo)
+	if e != nil {
+		fmt.Println(e.Error())
+		return
+	}
+	jsoncrack.SmartPrint(vo, true)
 }

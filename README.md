@@ -156,8 +156,8 @@ jsoncrack.Time can receive all kinds of time string format layouts below:
 ```
 ### 5.2 Example
 ```go
-type Time = jsoncrack.Time
 func main(){
+	type Time = jsoncrack.Time
 	type VO struct {
 		CreatedAt1  Time `json:"created_at1"`
 		CreatedAt2  Time `json:"created_at2"`
@@ -188,7 +188,7 @@ func main(){
 		"created_at13": "2018/1/01 15:04:05"
     }`)
 	vo := VO{}
-	e := json.Unmarshal(request, &vo)
+	e = json.Unmarshal(request, &vo)
 	if e != nil {
 		fmt.Println(e.Error())
 		return
