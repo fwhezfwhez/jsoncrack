@@ -11,7 +11,6 @@ go_import_path: github.com/fwhezfwhez/jsoncrack
 before_install:
   - go get github.com/fwhezfwhez/errorx
 script:
-  - go build example/main.go
   - go test ./
 notifications:
   email: false
