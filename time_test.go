@@ -3,24 +3,23 @@ package jsoncrack
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/fwhezfwhez/jsoncrack"
 	"testing"
 )
 
 func TestTime(t *testing.T) {
 	type VO struct {
-		CreatedAt1  jsoncrack.Time `json:"created_at1"`
-		CreatedAt2  jsoncrack.Time `json:"created_at2"`
-		CreatedAt3  jsoncrack.Time `json:"created_at3"`
-		CreatedAt4  jsoncrack.Time `json:"created_at4"`
-		CreatedAt6  jsoncrack.Time `json:"created_at6"`
-		CreatedAt7  jsoncrack.Time `json:"created_at7"`
-		CreatedAt8  jsoncrack.Time `json:"created_at8"`
-		CreatedAt9  jsoncrack.Time `json:"created_at9"`
-		CreatedAt10 jsoncrack.Time `json:"created_at10"`
-		CreatedAt11 jsoncrack.Time `json:"created_at11"`
-		CreatedAt12 jsoncrack.Time `json:"created_at12"`
-		CreatedAt13 jsoncrack.Time `json:"created_at13"`
+		CreatedAt1  Time `json:"created_at1"`
+		CreatedAt2  Time `json:"created_at2"`
+		CreatedAt3  Time `json:"created_at3"`
+		CreatedAt4  Time `json:"created_at4"`
+		CreatedAt6  Time `json:"created_at6"`
+		CreatedAt7  Time `json:"created_at7"`
+		CreatedAt8  Time `json:"created_at8"`
+		CreatedAt9  Time `json:"created_at9"`
+		CreatedAt10 Time `json:"created_at10"`
+		CreatedAt11 Time `json:"created_at11"`
+		CreatedAt12 Time `json:"created_at12"`
+		CreatedAt13 Time `json:"created_at13"`
 	}
 	var request = []byte(`{
         "created_at1": "2018-01-01",

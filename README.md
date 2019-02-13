@@ -7,14 +7,16 @@ jsoncrack is tool on developing to operate json []byte straightly.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [jsoncrack](#jsoncrack)
-  - [1. Start](#1-start)
-  - [2. Notice](#2-notice)
-    - [2.1 json marshaller can be specific when inited.](#21-json-marshaller-can-be-specific-when-inited)
-    - [2.2 crud of jsoncrack doesn't change the original data.](#22-crud-of-jsoncrack-doesnt-change-the-original-data)
-    - [2.3 Get() and Delete() can specific the returning type of the modified copy of data,ranging in `[jsoncrack.MAP, jsoncrack.ARRAY, jsoncrack.BYTE]`](#23-get-and-delete-can-specific-the-returning-type-of-the-modified-copy-of-dataranging-in-jsoncrackmap-jsoncrackarray-jsoncrackbyte)
-  - [3. Function menus](#3-function-menus)
-  - [4. Example](#4-example)
+- [1. Start](#1-start)
+- [2. Notice](#2-notice)
+  - [2.1 json marshaller can be specific when inited.](#21-json-marshaller-can-be-specific-when-inited)
+  - [2.2 crud of jsoncrack doesn't change the original data.](#22-crud-of-jsoncrack-doesnt-change-the-original-data)
+  - [2.3 Get() and Delete() can specific the returning type of the modified copy of data,ranging in `[jsoncrack.MAP, jsoncrack.ARRAY, jsoncrack.BYTE]`](#23-get-and-delete-can-specific-the-returning-type-of-the-modified-copy-of-dataranging-in-jsoncrackmap-jsoncrackarray-jsoncrackbyte)
+- [3. Function menus](#3-function-menus)
+- [4. Example](#4-example)
+- [5. Jsoncrack.Time](#5-jsoncracktime)
+  - [5.1 Available layouts](#51-available-layouts)
+  - [5.2 Example](#52-example)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -128,5 +130,70 @@ func main() {
 	}
 	fmt.Println(string(r.([]byte)))
 }
+```
 
+## 5. Jsoncrack.Time
+### 5.1 Available layouts
+jsoncrack.Time can receive all kinds of time string format layouts below:
+```go
+		"2006-01-02",
+		"2006-1-2",
+
+		"2006/01/02",
+		"2006/1/2",
+
+		"2006.01.02",
+		"2006.1.2",
+
+		"2006-01-02 15:04:05",
+		"2006-1-2 15:04:05",
+
+		"2006/01/02 15:04:05",
+		"2006/1/2 15:04:05",
+
+		"2006.01.02 15:04:05",
+		"2006.1.2 15:04:05",
+```
+### 5.2 Example
+```go
+type Time jsoncrack.Time
+func main(){
+	type VO struct {
+		CreatedAt1  Time `json:"created_at1"`
+		CreatedAt2  Time `json:"created_at2"`
+		CreatedAt3  Time `json:"created_at3"`
+		CreatedAt4  Time `json:"created_at4"`
+		CreatedAt6  Time `json:"created_at6"`
+		CreatedAt7  Time `json:"created_at7"`
+		CreatedAt8  Time `json:"created_at8"`
+		CreatedAt9  Time `json:"created_at9"`
+		CreatedAt10 Time `json:"created_at10"`
+		CreatedAt11 Time `json:"created_at11"`
+		CreatedAt12 Time `json:"created_at12"`
+		CreatedAt13 Time `json:"created_at13"`
+	}
+	var request = []byte(`{
+        "created_at1": "2018-01-01",
+        "created_at2": "2018-1-01",
+		"created_at3": "2018/01/01",
+		"created_at4": "2018/1/01",
+        "created_at6": "2018.01.01",
+        "created_at7": "2018.1.01",
+
+        "created_at8": "2018-01-01 15:04:05",
+        "created_at9": "2018-1-01 15:04:05",
+		"created_at10": "2018.01.01 15:04:05",
+		"created_at11": "2018.1.01 15:04:05",
+		"created_at12": "2018/01/01 15:04:05",
+		"created_at13": "2018/1/01 15:04:05"
+    }`)
+	vo := VO{}
+	e := json.Unmarshal(request, &vo)
+	if e != nil {
+		fmt.Println(e.Error())
+		t.Fail()
+		return
+	}
+	jsoncrack.SmartPrint(vo, true)
+}
 ```

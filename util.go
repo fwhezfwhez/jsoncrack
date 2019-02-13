@@ -3,7 +3,6 @@ package jsoncrack
 import (
 	"fmt"
 	"github.com/fwhezfwhez/errorx"
-	"github.com/fwhezfwhez/jsoncrack"
 	"math"
 	"reflect"
 	"time"
@@ -58,7 +57,7 @@ func IfZero(arg interface{}) bool {
 		}
 	case time.Time:
 		return v.IsZero()
-	case jsoncrack.Time:
+	case Time:
 		return v.Time().IsZero()
 	default:
 		return false
