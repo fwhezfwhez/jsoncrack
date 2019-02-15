@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-const(
-	MAP = 1+iota
+const (
+	MAP = 1 + iota
 	ARRAY
 	BYTES
 )
@@ -53,6 +53,25 @@ func NewCracker(jsoner JsonMarshaller) JsonCracker {
 	return JsonCracker{
 		Json: jsoner,
 	}
+}
+
+// set cracker's jsoner
+// make sure the function executing while app is init, don't set while app is running.
+// good:
+// func init(){
+//     jc.SetJsoner(yourJsoner)
+// }
+//
+// bad:
+// func service() {
+//     jc.Marshal()
+//     ...
+//     jc.SetJsoner(yourJsoner)
+//     ...
+// }
+//
+func (jc *JsonCracker) SetJsoner(jsoner JsonMarshaller) {
+	jc.Json = jsoner
 }
 
 // update a json raw-message with a new key-value pair
@@ -101,9 +120,10 @@ func (jc JsonCracker) Update(data []byte, k string, v interface{}, keys ...strin
 }
 
 // add k-v pair into a json []byte
-func (jc JsonCracker) Add(data []byte, k string, v interface{}, keys ...string) ([]byte, error){
-	return jc.Update(data , k , v , keys ...)
+func (jc JsonCracker) Add(data []byte, k string, v interface{}, keys ...string) ([]byte, error) {
+	return jc.Update(data, k, v, keys ...)
 }
+
 // When exists the key 'k' , it replace the origin value with v
 func (jc JsonCracker) MustUpdate(data []byte, k string, v interface{}, keys ...string) ([]byte, error) {
 	var dest map[string]interface{}
@@ -140,17 +160,17 @@ func (jc JsonCracker) SafeUpdate(data []byte, k string, v interface{}, keys ...s
 func (jc JsonCracker) Get(vtype int, data []byte, keys ...string) (interface{}, error) {
 	var dest map[string]interface{}
 	er := jc.Unmarshal(data, &dest)
-	if er!=nil {
+	if er != nil {
 		return nil, errorx.NewFromString(fmt.Sprintf("'data' is not well json format,err: %s", er.Error()))
 	}
 	var result interface{}
 	er = getParse(&result, dest, keys ...)
-	if er!=nil {
+	if er != nil {
 		return nil, errorx.NewFromString(fmt.Sprintf("get parse err: %s", er.Error()))
 	}
 	if vtype == MAP {
-		return result,nil
-	} else{
+		return result, nil
+	} else {
 		return jc.Marshal(result)
 	}
 }
@@ -164,19 +184,19 @@ func (jc JsonCracker) Get(vtype int, data []byte, keys ...string) (interface{}, 
 //
 // Delete() returns the data modified already, while keeping the former data unchanged.
 // When data is input , function will marshal its unmarshal object again to get a copy of data
-func (jc JsonCracker) Delete(vtype int,safe bool,data []byte, keys ...string)(interface{}, error){
+func (jc JsonCracker) Delete(vtype int, safe bool, data []byte, keys ...string) (interface{}, error) {
 	var dest map[string]interface{}
 	er := jc.Unmarshal(data, &dest)
-	if er!=nil {
+	if er != nil {
 		return nil, errorx.NewFromString(fmt.Sprintf("'data' is not well json format,err: %s", er.Error()))
 	}
 	er = deleteParse(safe, dest, keys ...)
-	if er!=nil {
+	if er != nil {
 		return nil, errorx.NewFromString(fmt.Sprintf("get parse err: %s", er.Error()))
 	}
 	if vtype == MAP {
-		return dest,nil
-	} else{
+		return dest, nil
+	} else {
 		return jc.Marshal(dest)
 	}
 }
@@ -283,24 +303,25 @@ L:
 }
 
 // get the value from 'target', typed map/struct, indexed by keys...
-func getParse(result *interface{},target interface{}, keys...string)error{
+func getParse(result *interface{}, target interface{}, keys ...string) error {
 	return getParseDetail(result, reflect.ValueOf(&target), keys...)
 }
+
 // detail of getParse
-func getParseDetail(result *interface{},target reflect.Value, sel ...string)error{
-	v:= reflect.Indirect(target)
-	if len(sel)==0 {
+func getParseDetail(result *interface{}, target reflect.Value, sel ...string) error {
+	v := reflect.Indirect(target)
+	if len(sel) == 0 {
 		return nil
 	}
 
 L:
 	switch v.Kind() {
-	case reflect.Array,reflect.Slice:
+	case reflect.Array, reflect.Slice:
 		nam := strings.Title(sel[0])
-		if len(sel) ==1 {
+		if len(sel) == 1 {
 			f := v.FieldByName(nam)
 			*result = f.Interface()
-		} else{
+		} else {
 			return errorx.NewFromString(fmt.Sprintf("key '%s' is a array/slice,however keys is not end", nam))
 		}
 	case reflect.Struct:
@@ -324,8 +345,8 @@ L:
 	case reflect.Interface:
 		vv := v.Interface()
 		if vvv, ok := vv.(map[string]interface{}); ok {
-			_,ok2 :=vvv[sel[0]]
-			if !ok2{
+			_, ok2 := vvv[sel[0]]
+			if !ok2 {
 				return errorx.NewFromString(fmt.Sprintf("key '%s' not found", sel[0]))
 			}
 			v = reflect.ValueOf(vvv)
@@ -339,11 +360,11 @@ L:
 }
 
 // delete a key-value pair of a target via keys indexing
-func deleteParse(safe bool, target interface{}, keys ...string)error{
+func deleteParse(safe bool, target interface{}, keys ...string) error {
 	return deleteParseDetail(safe, reflect.ValueOf(&target), keys ...)
 }
 
-func deleteParseDetail(safe bool, target reflect.Value, keys...string)error{
+func deleteParseDetail(safe bool, target reflect.Value, keys ...string) error {
 	if len(keys) == 0 {
 		return errorx.NewFromString("invalid sel")
 	}
