@@ -175,6 +175,19 @@ func (jc JsonCracker) Get(vtype int, data []byte, keys ...string) (interface{}, 
 	}
 }
 
+func GetString(data []byte, keys ...string) string{
+	jc := NewCracker(nil)
+	bI, e :=jc.Get(BYTES, data, keys...)
+	if e!=nil {
+		panic(e)
+	}
+	var v string
+	e = jc.Unmarshal(bI.([]byte), &v)
+	if e!=nil {
+		panic(e)
+	}
+	return v
+}
 // vtype: jsoncrack.MAP,jsoncrack.Array,jsoncrack.BYTES
 // When vtype is 'jsoncrack.Map', it returns (map[string]interface{}, error),
 // otherwise it returns (json.RawMessage,error) or ([]byte, error)

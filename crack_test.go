@@ -99,13 +99,16 @@ func TestGet(t *testing.T) {
 		}
 	}`)
 
-	r, e := jc.Get(BYTES, in, "class")
-	if e != nil {
-		fmt.Println(e.Error())
-		t.Fatal()
-	}
-	fmt.Println(string(r.([]byte)))
+	r, _ := jc.Get(BYTES, in, "HAPPY")
+	//if e != nil {
+	//	fmt.Println(e.Error())
+	//	t.Fatal()
+	//}
 
+	fmt.Println(r==nil)
+	fmt.Println(111,string(r.([]byte)))
+
+	var e error
 	r, e = jc.Get(BYTES, in, "class", "master", "company", "manager")
 	if e != nil {
 		fmt.Println(e.Error())
@@ -142,4 +145,27 @@ func TestDelete(t *testing.T) {
 		t.Fail()
 	}
 	fmt.Println(string(r.([]byte)))
+}
+
+func TestGetString(t *testing.T) {
+	var in = []byte(`{
+		"class": {
+			"name": "高中1班",
+			"master": {
+				"name": "张一山",
+				"age": 21,
+				"company": {
+					"name": "go公司",
+					"built_by": "张二山",
+					"manager": ["张一山", "张二山", "张三山"],
+					"country": {
+						"name": "China",
+						"location": "Asure"
+					}
+				}
+			}
+		}
+	}`)
+
+	fmt.Println(GetString(in, "class", "master", "company", "name"))
 }
