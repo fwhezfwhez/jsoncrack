@@ -99,7 +99,7 @@ func TestGet(t *testing.T) {
 		}
 	}`)
 
-	r, _ := jc.Get(BYTES, in, "HAPPY")
+	r, _ := jc.Get(BYTES, in, "class")
 	//if e != nil {
 	//	fmt.Println(e.Error())
 	//	t.Fatal()
@@ -167,5 +167,5 @@ func TestGetString(t *testing.T) {
 		}
 	}`)
 
-	fmt.Println(GetString(in, "class", "master", "company", "name"))
+	fmt.Println(GetString(in, "class", "master", "company","name"))
 }
